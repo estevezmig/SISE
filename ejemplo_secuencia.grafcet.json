@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 4,
+  "id": "demo_sise_01",
+  "name": "Cinta transportadora - arranque y parada",
+  "meta": {
+    "author": "SISE - demostración educativa",
+    "company": "",
+    "revision": "0.1",
+    "createdAt": "2026-11-12T00:00:00.000Z",
+    "updatedAt": "2026-11-12T00:00:00.000Z"
+  },
+  "variables": {
+    "v_start": {"id":"v_start","name":"Start","type":"BOOL","direction":"input"},
+    "v_stop": {"id":"v_stop","name":"Stop","type":"BOOL","direction":"input"},
+    "v_motor": {"id":"v_motor","name":"Motor","type":"BOOL","direction":"output"}
+  },
+  "grafcets": {
+    "g_main": {
+      "id":"g_main","name":"Main","kind":"partial",
+      "steps": {
+        "s_0":{"id":"s_0","number":0,"kind":"initial","position":{"x":200,"y":40},"label":"Parada"},
+        "s_1":{"id":"s_1","number":1,"kind":"normal","position":{"x":200,"y":220},"label":"Marcha"}
+      },
+      "transitions": {
+        "t_start":{"id":"t_start","number":1,"from":["s_0"],"to":["s_1"],"receptivity":"Start * /Stop","position":{"x":200,"y":130}},
+        "t_stop":{"id":"t_stop","number":2,"from":["s_1"],"to":["s_0"],"receptivity":"Stop","position":{"x":450,"y":130}}
+      },
+      "actions": {
+        "a_motor":{"id":"a_motor","stepId":"s_1","order":0,"kind":"continuous","text":"Motor"}
+      },
+      "comments": {}
+    }
+  },
+  "grafcetOrder":["g_main"]
+}
