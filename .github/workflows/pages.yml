@@ -1,0 +1,53 @@
+name: Publicar SISE (GrafcetMaker + conversor)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: sise-pages
+  cancel-in-progress: true
+jobs:
+  publish:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener archivos de SISE
+        uses: actions/checkout@v4
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Descargar versión fijada del editor original (licencia MIT)
+        run: |
+          git clone --quiet https://github.com/AronLenvig/GrafcetMaker.git editor-original
+          cd editor-original
+          git checkout --quiet 997dbb026488087252ca473d8828fbb43a957493
+      - name: Compilar GrafcetMaker
+        run: |
+          cd editor-original
+          npm ci
+          SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/editor/" npm run build
+      - name: Preparar sitio SISE
+        run: |
+          mkdir -p _site/editor _site/convertidor
+          cp -a editor-original/dist/. _site/editor/
+          cp editor-original/LICENSE _site/editor/LICENSE.txt
+          cp index.html _site/index.html
+          cp converter-core.js app.js ejemplo_secuencia.grafcet.json _site/convertidor/
+          cp convertidor/index.html _site/convertidor/index.html
+          touch _site/.nojekyll
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Subir sitio
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
