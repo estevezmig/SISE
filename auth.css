@@ -1,0 +1,13 @@
+html.sise-locked {overflow:hidden!important}
+html.sise-locked body > *:not(#sise-gate){visibility:hidden!important;pointer-events:none!important}
+#sise-gate{visibility:visible!important;position:fixed;inset:0;z-index:2147483646;display:grid;place-items:center;padding:18px;background:linear-gradient(145deg,#0a171a,#142f2a);font-family:system-ui,Arial,sans-serif;color:#effcf7}
+#sise-gate *{box-sizing:border-box}
+#sise-gate form{width:min(460px,100%);border:1px solid #40695d;background:#172d2b;border-radius:16px;padding:29px;box-shadow:0 24px 50px #0008}
+#sise-gate .sise-gate-logo{display:inline-block;background:#6de3b0;color:#09221a;border-radius:8px;padding:8px 13px;font-size:22px;font-weight:900}
+#sise-gate h1{margin:13px 0 7px;font-size:25px}#sise-gate p{color:#b6cfc5;font-size:14px;line-height:1.5}
+#sise-gate label{display:block;margin:19px 0 7px;font-weight:650;font-size:13px}
+#sise-gate input{width:100%;padding:12px;border-radius:8px;border:1px solid #507b6e;background:#0b201d;color:#fff;font-size:16px;outline-color:#7ce6bd}
+#sise-gate button{width:100%;padding:12px;margin:5px 0 9px;background:#74e3b6;color:#08221a;border:0;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
+#sise-gate a{display:block;text-align:center;color:#aff1d2;font-size:13px;margin-top:6px;text-decoration:none}
+#sise-gate .sise-gate-error{color:#ffafaf;min-height:23px;padding-top:3px;font-size:13px}
+@media print{#sise-gate{display:none!important}}

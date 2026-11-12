@@ -1,0 +1,331 @@
+{
+  "schemaVersion": 4,
+  "id": "fixture_Estacion_de_taladrado",
+  "name": "Estacion de taladrado",
+  "meta": {
+    "author": "SISE · ejemplo replicado de especificaciones públicas de GrafcetMaker",
+    "company": "",
+    "revision": "0.2",
+    "createdAt": "2026-11-12T00:00:00Z",
+    "updatedAt": "2026-11-12T00:00:00Z"
+  },
+  "variables": {
+    "v_start": {
+      "id": "v_start",
+      "name": "start",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_part": {
+      "id": "v_part",
+      "name": "part",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_clamped": {
+      "id": "v_clamped",
+      "name": "clamped",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_low": {
+      "id": "v_low",
+      "name": "low",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_high": {
+      "id": "v_high",
+      "name": "high",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_released": {
+      "id": "v_released",
+      "name": "released",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_ack": {
+      "id": "v_ack",
+      "name": "ack",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_Clamp": {
+      "id": "v_Clamp",
+      "name": "Clamp",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Spin": {
+      "id": "v_Spin",
+      "name": "Spin",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Down": {
+      "id": "v_Down",
+      "name": "Down",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Up": {
+      "id": "v_Up",
+      "name": "Up",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Service": {
+      "id": "v_Service",
+      "name": "Service",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Count": {
+      "id": "v_Count",
+      "name": "Count",
+      "type": "INT",
+      "direction": "internal"
+    }
+  },
+  "grafcets": {
+    "g1": {
+      "id": "g1",
+      "name": "Main",
+      "kind": "partial",
+      "steps": {
+        "s0": {
+          "id": "s0",
+          "number": 0,
+          "kind": "initial",
+          "position": {
+            "x": 200,
+            "y": 50
+          }
+        },
+        "s1": {
+          "id": "s1",
+          "number": 1,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 180
+          }
+        },
+        "s2": {
+          "id": "s2",
+          "number": 2,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 310
+          }
+        },
+        "s3": {
+          "id": "s3",
+          "number": 3,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 440
+          }
+        },
+        "s4": {
+          "id": "s4",
+          "number": 4,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 570
+          }
+        },
+        "s5": {
+          "id": "s5",
+          "number": 5,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 700
+          }
+        }
+      },
+      "transitions": {
+        "t1": {
+          "id": "t1",
+          "number": 1,
+          "from": [
+            "s0"
+          ],
+          "to": [
+            "s1"
+          ],
+          "receptivity": "↑start * part",
+          "position": {
+            "x": 200,
+            "y": 130
+          }
+        },
+        "t2": {
+          "id": "t2",
+          "number": 2,
+          "from": [
+            "s1"
+          ],
+          "to": [
+            "s2"
+          ],
+          "receptivity": "clamped",
+          "position": {
+            "x": 200,
+            "y": 260
+          }
+        },
+        "t3": {
+          "id": "t3",
+          "number": 3,
+          "from": [
+            "s2"
+          ],
+          "to": [
+            "s3"
+          ],
+          "receptivity": "low",
+          "position": {
+            "x": 200,
+            "y": 390
+          }
+        },
+        "t4": {
+          "id": "t4",
+          "number": 4,
+          "from": [
+            "s3"
+          ],
+          "to": [
+            "s4"
+          ],
+          "receptivity": "high",
+          "position": {
+            "x": 200,
+            "y": 520
+          }
+        },
+        "t5": {
+          "id": "t5",
+          "number": 5,
+          "from": [
+            "s4"
+          ],
+          "to": [
+            "s0"
+          ],
+          "receptivity": "released * (Count < 100)",
+          "position": {
+            "x": 200,
+            "y": 650
+          }
+        },
+        "t6": {
+          "id": "t6",
+          "number": 6,
+          "from": [
+            "s4"
+          ],
+          "to": [
+            "s5"
+          ],
+          "receptivity": "released * (Count >= 100)",
+          "position": {
+            "x": 200,
+            "y": 780
+          }
+        },
+        "t7": {
+          "id": "t7",
+          "number": 7,
+          "from": [
+            "s5"
+          ],
+          "to": [
+            "s0"
+          ],
+          "receptivity": "↑ack",
+          "position": {
+            "x": 200,
+            "y": 910
+          }
+        }
+      },
+      "actions": {
+        "a1": {
+          "id": "a1",
+          "stepId": "s1",
+          "kind": "storedOnActivation",
+          "text": "Clamp := 1",
+          "order": 1
+        },
+        "a2": {
+          "id": "a2",
+          "stepId": "s2",
+          "kind": "continuous",
+          "text": "Spin",
+          "order": 2
+        },
+        "a3": {
+          "id": "a3",
+          "stepId": "s2",
+          "kind": "continuous",
+          "text": "Down",
+          "order": 3
+        },
+        "a4": {
+          "id": "a4",
+          "stepId": "s3",
+          "kind": "continuous",
+          "text": "Spin",
+          "order": 4
+        },
+        "a5": {
+          "id": "a5",
+          "stepId": "s3",
+          "kind": "continuous",
+          "text": "Up",
+          "order": 5
+        },
+        "a6": {
+          "id": "a6",
+          "stepId": "s4",
+          "kind": "storedOnActivation",
+          "text": "Clamp := 0",
+          "order": 6
+        },
+        "a7": {
+          "id": "a7",
+          "stepId": "s4",
+          "kind": "storedOnActivation",
+          "text": "Count := Count + 1",
+          "order": 7
+        },
+        "a8": {
+          "id": "a8",
+          "stepId": "s5",
+          "kind": "continuous",
+          "text": "Service",
+          "order": 8
+        },
+        "a9": {
+          "id": "a9",
+          "stepId": "s5",
+          "kind": "storedOnDeactivation",
+          "text": "Count := 0",
+          "order": 9
+        }
+      },
+      "comments": {}
+    }
+  },
+  "grafcetOrder": [
+    "g1"
+  ]
+}

@@ -39,13 +39,13 @@ jobs:
           cp -a editor-original/dist/. _site/editor/
           cp editor-original/LICENSE _site/editor/LICENSE.txt
           cp index.html _site/index.html
-          cp converter-core.js app.js ejemplo_secuencia.grafcet.json _site/convertidor/
+          cp converter-core.js app.js ejemplo_*.grafcet.json _site/convertidor/
+          cp auth.js auth.css _site/
+          python3 scripts/inject_auth.py _site/editor
           cp convertidor/index.html _site/convertidor/index.html
           touch _site/.nojekyll
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Subir sitio
         uses: actions/upload-pages-artifact@v3
         with:

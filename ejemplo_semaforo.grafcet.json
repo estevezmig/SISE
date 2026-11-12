@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 4,
+  "id": "fixture_Semaforo",
+  "name": "Semaforo",
+  "meta": {
+    "author": "SISE · ejemplo replicado de especificaciones públicas de GrafcetMaker",
+    "company": "",
+    "revision": "0.2",
+    "createdAt": "2026-11-12T00:00:00Z",
+    "updatedAt": "2026-11-12T00:00:00Z"
+  },
+  "variables": {
+    "v_request": {
+      "id": "v_request",
+      "name": "request",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_Red": {
+      "id": "v_Red",
+      "name": "Red",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Yellow": {
+      "id": "v_Yellow",
+      "name": "Yellow",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Green": {
+      "id": "v_Green",
+      "name": "Green",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Walk": {
+      "id": "v_Walk",
+      "name": "Walk",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_Req": {
+      "id": "v_Req",
+      "name": "Req",
+      "type": "BOOL",
+      "direction": "internal"
+    }
+  },
+  "grafcets": {
+    "g1": {
+      "id": "g1",
+      "name": "Main",
+      "kind": "partial",
+      "steps": {
+        "s0": {
+          "id": "s0",
+          "number": 0,
+          "kind": "initial",
+          "position": {
+            "x": 200,
+            "y": 50
+          }
+        },
+        "s1": {
+          "id": "s1",
+          "number": 1,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 180
+          }
+        },
+        "s2": {
+          "id": "s2",
+          "number": 2,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 310
+          }
+        }
+      },
+      "transitions": {
+        "t1": {
+          "id": "t1",
+          "number": 1,
+          "from": [
+            "s0"
+          ],
+          "to": [
+            "s1"
+          ],
+          "receptivity": "10s/X0",
+          "position": {
+            "x": 200,
+            "y": 130
+          }
+        },
+        "t2": {
+          "id": "t2",
+          "number": 2,
+          "from": [
+            "s1"
+          ],
+          "to": [
+            "s2"
+          ],
+          "receptivity": "30s/X1 + Req * 10s/X1",
+          "position": {
+            "x": 200,
+            "y": 260
+          }
+        },
+        "t3": {
+          "id": "t3",
+          "number": 3,
+          "from": [
+            "s2"
+          ],
+          "to": [
+            "s0"
+          ],
+          "receptivity": "3s/X2",
+          "position": {
+            "x": 200,
+            "y": 390
+          }
+        }
+      },
+      "actions": {
+        "a1": {
+          "id": "a1",
+          "stepId": "s0",
+          "kind": "continuous",
+          "text": "Red",
+          "order": 1
+        },
+        "a2": {
+          "id": "a2",
+          "stepId": "s0",
+          "kind": "continuous",
+          "text": "Walk",
+          "order": 2
+        },
+        "a3": {
+          "id": "a3",
+          "stepId": "s0",
+          "kind": "storedOnActivation",
+          "text": "Req := 0",
+          "order": 3
+        },
+        "a4": {
+          "id": "a4",
+          "stepId": "s1",
+          "kind": "continuous",
+          "text": "Green",
+          "order": 4
+        },
+        "a5": {
+          "id": "a5",
+          "stepId": "s1",
+          "kind": "storedOnEvent",
+          "text": "Req := 1",
+          "order": 5,
+          "condition": "↑request"
+        },
+        "a6": {
+          "id": "a6",
+          "stepId": "s2",
+          "kind": "continuous",
+          "text": "Yellow",
+          "order": 6
+        }
+      },
+      "comments": {}
+    }
+  },
+  "grafcetOrder": [
+    "g1"
+  ]
+}

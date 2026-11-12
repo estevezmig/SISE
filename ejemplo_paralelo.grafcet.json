@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 4,
+  "id": "fixture_Paralelo_AND",
+  "name": "Paralelo AND",
+  "meta": {
+    "author": "SISE · ejemplo replicado de especificaciones públicas de GrafcetMaker",
+    "company": "",
+    "revision": "0.2",
+    "createdAt": "2026-11-12T00:00:00Z",
+    "updatedAt": "2026-11-12T00:00:00Z"
+  },
+  "variables": {
+    "v_start": {
+      "id": "v_start",
+      "name": "start",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_b1": {
+      "id": "v_b1",
+      "name": "b1",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_b2": {
+      "id": "v_b2",
+      "name": "b2",
+      "type": "BOOL",
+      "direction": "input"
+    },
+    "v_M1": {
+      "id": "v_M1",
+      "name": "M1",
+      "type": "BOOL",
+      "direction": "output"
+    },
+    "v_M2": {
+      "id": "v_M2",
+      "name": "M2",
+      "type": "BOOL",
+      "direction": "output"
+    }
+  },
+  "grafcets": {
+    "g1": {
+      "id": "g1",
+      "name": "Main",
+      "kind": "partial",
+      "steps": {
+        "s0": {
+          "id": "s0",
+          "number": 0,
+          "kind": "initial",
+          "position": {
+            "x": 200,
+            "y": 50
+          }
+        },
+        "s1": {
+          "id": "s1",
+          "number": 1,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 180
+          }
+        },
+        "s2": {
+          "id": "s2",
+          "number": 2,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 310
+          }
+        },
+        "s3": {
+          "id": "s3",
+          "number": 3,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 440
+          }
+        },
+        "s4": {
+          "id": "s4",
+          "number": 4,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 570
+          }
+        },
+        "s5": {
+          "id": "s5",
+          "number": 5,
+          "kind": "normal",
+          "position": {
+            "x": 200,
+            "y": 700
+          }
+        }
+      },
+      "transitions": {
+        "t1": {
+          "id": "t1",
+          "number": 1,
+          "from": [
+            "s0"
+          ],
+          "to": [
+            "s1",
+            "s2"
+          ],
+          "receptivity": "start",
+          "position": {
+            "x": 200,
+            "y": 130
+          }
+        },
+        "t2": {
+          "id": "t2",
+          "number": 2,
+          "from": [
+            "s1"
+          ],
+          "to": [
+            "s3"
+          ],
+          "receptivity": "b1",
+          "position": {
+            "x": 200,
+            "y": 260
+          }
+        },
+        "t3": {
+          "id": "t3",
+          "number": 3,
+          "from": [
+            "s2"
+          ],
+          "to": [
+            "s4"
+          ],
+          "receptivity": "b2",
+          "position": {
+            "x": 200,
+            "y": 390
+          }
+        },
+        "t4": {
+          "id": "t4",
+          "number": 4,
+          "from": [
+            "s3",
+            "s4"
+          ],
+          "to": [
+            "s5"
+          ],
+          "receptivity": "1",
+          "position": {
+            "x": 200,
+            "y": 520
+          }
+        },
+        "t5": {
+          "id": "t5",
+          "number": 5,
+          "from": [
+            "s5"
+          ],
+          "to": [
+            "s0"
+          ],
+          "receptivity": "2s/X5",
+          "position": {
+            "x": 200,
+            "y": 650
+          }
+        }
+      },
+      "actions": {
+        "a1": {
+          "id": "a1",
+          "stepId": "s1",
+          "kind": "continuous",
+          "text": "M1",
+          "order": 1
+        },
+        "a2": {
+          "id": "a2",
+          "stepId": "s2",
+          "kind": "continuous",
+          "text": "M2",
+          "order": 2
+        }
+      },
+      "comments": {}
+    }
+  },
+  "grafcetOrder": [
+    "g1"
+  ]
+}

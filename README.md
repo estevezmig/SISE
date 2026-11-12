@@ -1,48 +1,37 @@
-# SISE · GRAFCET → Ladder y FUP
+# SISE · Sistemas Secuenciales · Prototipo 0.2
 
-## Estado: prototipo 0.1 (12 noviembre 2026)
+Repositorio didáctico para trabajar con GRAFCET, Ladder y FUP. Se compone de:
 
-**No es una versión compilada ni integrada de GrafcetMaker.** Este paquete define cómo desplegar una **copia real** de GrafcetMaker, compilada desde su código fuente MIT, y añade al sitio un **conversor independiente** que puede importar archivos `.grafcet.json` de GrafcetMaker.
+- **Editor**: copia compilada de [GrafcetMaker](https://github.com/AronLenvig/GrafcetMaker), de Aron Ingi Lenvig y colaboradores (licencia MIT), sin modificar el motor de simulación. Se descarga desde el commit `997dbb026488087252ca473d8828fbb43a957493` durante el despliegue.
+- **Conversor genérico LD/FBD**: desarrollo experimental independiente de SISE para diagramas GRAFCET en archivos `.grafcet.json` v4.
 
-La publicación se configura mediante `.github/workflows/pages.yml` en el repositorio `estevezmig/SISE`. La compilación se ejecuta en GitHub Actions. Para habilitar el sitio público, puede ser necesario activar **Settings > Pages > Source: GitHub Actions**. El resultado del despliegue debe comprobarse en la pestaña Actions.
+**AVISO IMPORTANTE: el conversor NO es funcional para controlar un PLC y está pendiente de depuración y validación.** Los esquemas son representaciones didácticas, no archivos importables en LOGO!, TIA Portal ni ningún PLC. Es imprescindible contrastar simultaneidad, transiciones transitorias, acciones memorizadas y temporizadores con IEC 60848 y las condiciones del autómata.
 
-## Estructura
+## Funciones del conversor 0.2
 
-- `index.html`: portal SISE.
-- `convertidor/index.html`, `app.js`, `converter-core.js`: interfaz y motor de conversión; sin servidor ni dependencias externas.
-- `ejemplo_secuencia.grafcet.json`: ejemplo compatible con el esquema de GrafcetMaker v4.
-- `ejemplo_ladder.svg`, `ejemplo_fup.svg`, `ejemplo_logica.txt`: resultado del ejemplo.
-- `.github/workflows/pages.yml`: descarga **GrafcetMaker** desde https://github.com/AronLenvig/GrafcetMaker, fija la revisión `997dbb026488087252ca473d8828fbb43a957493`, compila con Node 22 y publica el resultado como `editor/` junto a este conversor en `convertidor/`.
+- Secuencias de un solo GRAFCET parcial, con una etapa inicial.
+- Divergencias y convergencias alternativas (OR) y paralelas (AND).
+- Receptividades booleanas (`AND`, `OR`, `NOT`), flancos `↑`, `↓`, `RE`, `FE`, temporizadores por etapa (`10s/X0`) y comparaciones sencillas (`Count >= 100`).
+- Acciones continuas y acciones memorizadas al activar, desactivar o detectar evento; `MOVE`, `ADD`, `SUB` sencillos.
+- Etapas calculadas a partir de un estado previo, con marcas de transición y estado siguiente, presentado en dibujos SVG Ladder y FUP.
+- Exportación SVG, impresión/PDF y lista lógica ilustrativa.
 
-## Cómo probar sin publicar
+**Limitaciones conocidas:** no convierte macroetapas, forzados, varios GRAFCET relacionados ni expresiones numéricas complejas; el dibujo no implementa los bloques de TON/comparación/flanco reales del PLC, solo representa sus señales y parámetros. No se ha verificado aún la ejecución equivalente al motor GRAFCET del autor.
 
-Abre `convertidor/index.html` en un navegador moderno. Pulsa **Cargar ejemplo**, o importa desde GrafcetMaker un archivo `.grafcet.json` versión 4. Puedes alternar entre Ladder y FUP, exportar ambos en SVG, copiar la lógica o imprimir a PDF. Al abrir mediante `file://` algunas funciones del navegador (p. ej., portapapeles) pueden estar restringidas; con servidor web funcionan mejor.
+## Ejemplos y pruebas
 
-El enlace «Abrir editor GRAFCET» espera que la web esté publicada bajo `/editor/`; en la copia local puedes utilizar https://www.grafcet.org/es/.
+`ejemplo_semaforo.grafcet.json` y `ejemplo_taladrado.grafcet.json` reproducen las etapas, condiciones y acciones documentadas en los ejemplos originales GrafcetMaker mediante la estructura pública v4. No son archivos exportados desde el editor original.
 
-## Qué admite este primer conversor
+`ejemplo_paralelo.grafcet.json` ejercita una divergencia y convergencia AND. Ejecutar las comprobaciones con:
 
-- Un único GRAFCET parcial; exactamente una etapa inicial.
-- Secuencia lineal simple, con o sin retorno a la etapa inicial (sin ramas).
-- Señales booleanas y condiciones `AND`, `OR`, `NOT` con paréntesis (además de constantes 1/0).
-- Acciones continuas sobre salidas BOOL.
-- Transiciones evaluadas y memorizadas antes de actualizar etapas, etapas implementadas como memorias reset-dominantes y pulso `INIT` de primer ciclo.
+```sh
+node tests/test-converter.js
+```
 
-**No admite**: divergencias/convergencias Y/O, macroetapas, acciones memorizadas, eventos, flancos RE/FE, temporizadores, contadores, comparaciones numéricas, múltiples grafcets, órdenes de forzado o importación PLC directa. Cuando el archivo utiliza alguna de esas características, la conversión se **bloquea** y muestra un error; no se inventa equivalencia.
+## Despliegue
 
-La salida Ladder/FUP es **gráfica y didáctica**, no código directamente ejecutable en LOGO! o S7-1200. Debe verificarse la equivalencia secuencial en el autómata de destino (incluido orden de redes, first scan, valores iniciales y prioridad S/R) antes de uso real.
+`.github/workflows/pages.yml` construye una copia fija de GrafcetMaker con `npm ci && npm run build`, copia la licencia original y publica `/editor/`, `/convertidor/` y la portada mediante GitHub Pages. `scripts/inject_auth.py` incorpora un **acceso por contraseña de interfaz** en las páginas del editor; el conversor usa el mismo archivo `auth.js`.
 
-## Desarrollo futuro
+La contraseña JavaScript **no constituye una barrera de seguridad real**: al ser un repositorio público, el código fuente es visible. No usarla para guardar datos sensibles.
 
-1. Verificar el build de GrafcetMaker en GitHub Pages de SISE y probar editor y conversor.
-2. Añadir integración directa «Exportar a Ladder/FUP» al menú del editor original, reutilizando su modelo de proyecto.
-3. Añadir ramas Y/O con semántica IEC 60848 y pruebas de equivalencia por trazas.
-4. Añadir temporizadores, contadores y acciones memorizadas, seguidos de exportadores específicos LOGO! y TIA Portal.
-
-## Licencias
-
-GrafcetMaker (autor Aron Ingi Lenvig y colaboradores) se distribuye bajo licencia **MIT**. El workflow incluye su `LICENSE` en la publicación del editor. Código fuente original: https://github.com/AronLenvig/GrafcetMaker. **Este repositorio no contiene copias de ese código**; lo obtiene durante el despliegue y conserva los avisos de licencia.
-
-## Pruebas
-
-Ejecuta `node tests/test-converter.js` (Node 22). Prueba las estructuras de salida y las condiciones no soportadas. Aún faltan pruebas end-to-end de navegador y validación contra la ejecución del editor original.
+Para probar localmente el conversor, utilizar un servidor estático (por ejemplo `python -m http.server`) y abrir `convertidor/`.
