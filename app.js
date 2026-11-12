@@ -1,0 +1,17 @@
+'use strict';
+(()=>{
+const $=id=>document.getElementById(id);
+let source=null,model=null,view='ladder',svgs={};
+const tabs=['ladder','fup','logic'];
+function status(message,error=false,ok=false){let e=$('status');e.textContent=message;e.className='alert '+(error?'error':ok?'success':'');}
+function enable(ready){for(const id of ['tab-ladder','tab-fup','tab-logic','download','copy','pdf'])$(id).disabled=!ready;}
+function activate(v){view=v;for(const t of tabs)$('tab-'+t).setAttribute('aria-pressed',t===v?'true':'false');$('diagram').classList.toggle('hidden',v==='logic');$('logic').classList.toggle('hidden',v!=='logic');if(v==='logic'){$('logic').textContent=SISEConverter.generateLogic(model);}else{$('diagram').innerHTML=svgs[v];}$('download').disabled=v==='logic';$('pdf').disabled=v==='logic';}
+function convert(){try{if(!source)throw Error('Primero importa un proyecto.');const bytes=new TextEncoder().encode(JSON.stringify(source)).length;if(bytes>10*1024*1024)throw Error('El archivo supera los 10 MB.');model=SISEConverter.classify(source);svgs.ladder=SISEConverter.svgLadder(model);svgs.fup=SISEConverter.svgFup(model);$('projectTitle').textContent=model.title;$('count').textContent=`${model.steps.length} etapas · ${model.transitions.length} transiciones · ${model.actions.length} acciones`;enable(true);activate(view);status('Conversión completada. Resultado didáctico: revisa inicialización y secuencia de scan.',false,true);}catch(e){model=null;enable(false);$('diagram').innerHTML='<p style="padding:30px;color:#ffe4bf">No se ha generado ningún esquema.</p>';$('logic').textContent='';status(e.message,true);}}
+function choose(src,label){source=src;$('convert').disabled=false;status('Cargado: '+label+'. Pulsa Convertir.');convert();}
+$('file').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;try{if(f.size>10*1024*1024)throw Error('Archivo demasiado grande (máximo 10 MB).');choose(JSON.parse(await f.text()),f.name);}catch(ex){source=null;$('convert').disabled=true;enable(false);status('No se puede leer el JSON: '+ex.message,true);}});
+$('example').addEventListener('click',()=>{try{choose(JSON.parse($('demo-data').textContent),'Ejemplo · cinta transportadora');}catch(e){status(e.message,true);}});
+$('convert').addEventListener('click',convert);for(const v of tabs)$('tab-'+v).addEventListener('click',()=>{if(model)activate(v);});
+$('download').addEventListener('click',()=>{if(!model||view==='logic')return;const data=new Blob([svgs[view]],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(data);const a=document.createElement('a');a.href=url;a.download=`SISE_${view}_${model.title.replace(/[^a-z0-9_-]/gi,'_').slice(0,32)}.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);});
+$('copy').addEventListener('click',async()=>{if(!model)return;const logic=SISEConverter.generateLogic(model);try{await navigator.clipboard.writeText(logic);status('Lista lógica copiada al portapapeles.',false,true);}catch(e){status('La copia no está disponible en este navegador. Abre «Lista lógica» para copiar manualmente.',true);}});
+$('pdf').addEventListener('click',()=>{if(model&&view!=='logic')window.print();});
+})();
