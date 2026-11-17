@@ -28,6 +28,8 @@ jobs:
           git clone --quiet https://github.com/AronLenvig/GrafcetMaker.git editor-original
           cd editor-original
           git checkout --quiet 997dbb026488087252ca473d8828fbb43a957493
+      - name: Preparar navegación hacia SISE
+        run: python3 scripts/inject_back.py editor-original
       - name: Compilar GrafcetMaker
         run: |
           cd editor-original
