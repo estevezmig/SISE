@@ -4,7 +4,6 @@
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function assertSupported(m){
  if(m.helpers.length || m.storedActions.length) throw Error('Esta prueba admite contactos booleanos y acciones continuas. Flancos, temporizadores, comparaciones y acciones memorizadas aún no están disponibles.');
- if(m.variables.some(v=>v.type!=='BOOL')) throw Error('Esta prueba solo admite variables booleanas.');
 }
 function evaluate(m,inputs,activeIds,on){
  assertSupported(m);
