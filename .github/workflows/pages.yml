@@ -33,10 +33,18 @@ jobs:
           cd editor-original
           npm ci
           SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/editor/" npm run build
+      - name: Compilar GRAFCET + Ladder
+        run: |
+          cp -a editor-original/dist /tmp/sise-editor-original
+          python3 integration/apply.py editor-original
+          cd editor-original
+          SITE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/grafcet-ladder/" npm run build
       - name: Preparar sitio SISE
         run: |
-          mkdir -p _site/editor _site/convertidor
-          cp -a editor-original/dist/. _site/editor/
+          mkdir -p _site/editor _site/convertidor _site/grafcet-ladder
+          cp -a /tmp/sise-editor-original/. _site/editor/
+          cp -a editor-original/dist/. _site/grafcet-ladder/
+          cp editor-original/LICENSE _site/grafcet-ladder/LICENSE.txt
           cp editor-original/LICENSE _site/editor/LICENSE.txt
           cp index.html _site/index.html
           cp converter-core.js app.js ejemplo_*.grafcet.json _site/convertidor/
