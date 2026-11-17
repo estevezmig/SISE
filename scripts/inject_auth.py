@@ -11,6 +11,12 @@ for p in root.rglob('*.html'):
     injection=(f'<link rel="stylesheet" href="{rel}/auth.css">'
                f'<script src="{rel}/auth.js"></script>')
     raw=p.read_text(encoding='utf-8')
+    # Add the return link to the editor's entry pages. The computed path also
+    # works for /editor/es/ and other language subdirectories.
+    if p.name == 'index.html' and p.parent.relative_to(root).as_posix() in ('.', 'es', 'en', 'fr', 'de', 'pt', 'da', 'sv', 'pl', 'ru', 'zh', 'hi'):
+        target=rel+'/'
+        link=f'<a href="{target}" style="position:fixed;top:12px;left:12px;z-index:90;background:#142a28;color:#adf6d1;padding:8px 12px;border-radius:8px;text-decoration:none;font:14px system-ui">← Volver a SISE</a>'
+        raw=raw.replace('<body>', '<body>'+link, 1)
     if '</head>' not in raw:continue
     if 'auth.js' in raw:continue
     p.write_text(raw.replace('<head>','<head>'+injection,1),encoding='utf-8')
